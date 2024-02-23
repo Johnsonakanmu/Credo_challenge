@@ -62,7 +62,7 @@ exports.updateYourDetails = asyncWrapper(async (req, res, next) => {
         balance,
       },
     },
-    { new: true } // to return the updated document
+    { new: true } 
   );
 
   if (!updatedUser) {
@@ -81,8 +81,8 @@ exports.accountDeposit = asyncWrapper(async (req, res, next) => {
 
   const user = await Credo.findOneAndUpdate(
     { _id: uuid },
-    { $inc: { amount: amount, balance: amount } }, // Increment both amount and balance
-    { new: true } // to return the updated document
+    { $inc: { amount: amount, balance: amount } }, 
+    { new: true } 
   );
 
   if (!user) {
@@ -92,7 +92,7 @@ exports.accountDeposit = asyncWrapper(async (req, res, next) => {
   res.status(200).json({
     data: {
       msg: "Deposit to your account successful",
-      amount: user.amount, // Retrieve the updated amount from the document
+      amount: user.amount, 
       balance: user.balance,
     },
   });
@@ -115,7 +115,6 @@ exports.accountWithdraw = asyncWrapper(async (req, res, next) => {
     return res.status(403).json({ msg: "Insufficient balance" });
   }
 
-  // Use findOneAndUpdate to atomically update and retrieve the updated document
   const updatedUser = await Credo.findOneAndUpdate(
     { _id: uuid, balance: { $gte: amount } }, // Ensure sufficient balance before updating
     { $inc: { amount: -amount, balance: -amount } },
