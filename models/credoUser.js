@@ -12,6 +12,7 @@ const CredoUserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -54,7 +55,7 @@ const CredoUserSchema = new mongoose.Schema({
     required: false,
   },
   balance: {
-    type: mongoose.Types.Decimal128, 
+    type: mongoose.Types.Decimal128,
     default: 0.0,
   },
   accountNumber: {

@@ -2,6 +2,7 @@ const Credo = require('../models/credoUser')
 const asyncWrapper = require("../middleware/async");
 const generateAccountNumber = require("../randum-account-number");
 const { createCustomError } = require("../error/custom_error");
+const bcrypt = require('bcryptjs')
 
 async function encriptPassword(password) {
   const salt = await bcrypt.genSalt(10);
@@ -10,12 +11,12 @@ async function encriptPassword(password) {
 }
 
 exports.createAccount = asyncWrapper(async (req, res, next) => {
-  const emailExist = await Credo.findOne({
-    where: { email: req.body.email },
-  });
+  const emailExist = await Credo.findOne({ email: req.body.email });
+
   if (emailExist) {
-    return res.status(403).json({ msg: "Email already exist" });
+    return res.status(403).json({ msg: "Email already exists" });
   }
+
   const accountNumber = generateAccountNumber();
   const userNumber = await Credo.create({
     firstName: req.body.firstName,
@@ -26,10 +27,16 @@ exports.createAccount = asyncWrapper(async (req, res, next) => {
     balance: req.body.balance,
     accountNumber: accountNumber,
   });
+
+    const responseData = await Credo.findOne({ _id: userNumber._id }).select(
+      "-password"
+    );
+
   res
     .status(200)
-    .json({ mgs: "Your account as been ctreated", data: userNumber });
+    .json({ msg: "Your account has been created", data: responseData });
 });
+
 
 
 exports.updateYourDetails = asyncWrapper(async (req, res, next) => {
