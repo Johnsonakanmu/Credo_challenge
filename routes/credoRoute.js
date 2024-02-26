@@ -4,7 +4,7 @@ const credoController = require('../controller/credoController')
 
 router.post('/create', credoController.createAccount)
 
-router.put('/:uuid', credoController.updateYourDetails);
+router.put('/:accountNumber', credoController.updateYourDetails);
 
 router.put("/deposit/:uuid", credoController.accountDeposit);
 
